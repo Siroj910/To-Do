@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    {% if request.user.is_authenticated %}
+        <h2>{{ request.user }}</h2>
+        <a href="#">Log out</a>
+    {% else %}
+        <a href="{% url 'login' %}">Log in</a>
+    {% endif %}
+
+    <h1>My to do list</h1>
+    <ul>
+        {% for task in tasks %}
+            <li>
+                <a href="{% url 'task-detail' task.id %}">{{ task.title }}</a>
+                <a href="{% url 'task-edit' task.id %}" style="font-size:10px">Edit</a>
+                <a href="{% url 'task-delete' task.id %}" style="font-size:10px">Delete</a>
+
+            </li>
+        {% endfor %}
+    </ul>
+                <h1><a href="{% url 'task-create' %}" style="font-size:10px">Create</a></h1>
+
+
+</body>
+</html>

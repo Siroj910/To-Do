@@ -7,9 +7,10 @@
 <body>
     {% if request.user.is_authenticated %}
         <h2>{{ request.user }}</h2>
-        <a href="#">Log out</a>
+        <a href="{% url 'logout' %}">Log out</a>
     {% else %}
         <a href="{% url 'login' %}">Log in</a>
+        <a href="{% url 'reg' %}">Registration</a>
     {% endif %}
 
     <h1>My to do list</h1>

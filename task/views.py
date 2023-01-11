@@ -1,7 +1,11 @@
+from django.contrib.auth import login
+from django.contrib.auth.forms import UserCreationForm # we should import this class
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
+from django.contrib.auth.models import User
 from django.shortcuts import render
 from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView, UpdateView, DeleteView, CreateView
+from django.views.generic import ListView, DetailView, UpdateView, DeleteView, CreateView, FormView
 
 from .models import Task
 
@@ -31,45 +35,24 @@ class TaskCreateView(CreateView):
     model = Task
     success_url = reverse_lazy('task-list')
 
-
-
-
-
 #TODO: Login and registration
 class LogInView(LoginView):
     template_name = "login.html"
     success_url = reverse_lazy('task-list')
 
 
+#FIXME: User reg forms is not defined
+class RegistrationView(FormView):
+    template_name = "user_reg.html"
+    form_class = UserCreationForm
+    redirect_authenticated_url = True
+    success_url = reverse_lazy('login')
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# AUTH
-#from django.contrib.auth.views import LoginView
-# field, redirect_authenticated_user=defautl(False)
-# def get_succes_url(self):
-#     return reverse_lazy("name")
-
-
+    def form_valid(self, form):
+        user = form.save()
+        if user is not None:
+            login(self.request, user)
+        return super(RegistrationView, self).form_valid(form)
 
 
 

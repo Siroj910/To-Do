@@ -9,10 +9,17 @@ from django.views.generic import ListView, DetailView, UpdateView, DeleteView, C
 
 from .models import Task
 
-class TaskListView(ListView):
+class TaskListView(LoginRequiredMixin,ListView):
     model = Task
     context_object_name = "tasks"
     template_name = "task_list.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['tasks'] = context['tasks'].filter(user=self.request.user)
+
+        # context['count'] = context['tasks'].filter(complete=False).count()
+        return context
 
 class TaskDetailView(DetailView):
     model = Task
@@ -35,13 +42,14 @@ class TaskCreateView(CreateView):
     model = Task
     success_url = reverse_lazy('task-list')
 
-#TODO: Login and registration
+    def form_invalid(self, form):
+        form.instance.user =  self.request.user
+        return super(TaskCreateView, self).form_valid(form)
+
 class LogInView(LoginView):
     template_name = "login.html"
     success_url = reverse_lazy('task-list')
 
-
-#FIXME: User reg forms is not defined
 class RegistrationView(FormView):
     template_name = "user_reg.html"
     form_class = UserCreationForm

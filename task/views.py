@@ -17,9 +17,9 @@ class TaskListView(LoginRequiredMixin,ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['tasks'] = context['tasks'].filter(user=self.request.user)
-
         # context['count'] = context['tasks'].filter(complete=False).count()
         return context
+
 
 class TaskDetailView(DetailView):
     model = Task
@@ -32,7 +32,6 @@ class TaskEditView(UpdateView):
     success_url = reverse_lazy('task-list')
 
 class TaskDeleteView(DeleteView):
-    template_name = "task_delete_confirmation.html"
     model = Task
     success_url = reverse_lazy('task-list')
 
@@ -43,7 +42,7 @@ class TaskCreateView(CreateView):
     success_url = reverse_lazy('task-list')
 
     def form_invalid(self, form):
-        form.instance.user =  self.request.user
+        form.instance.user = self.request.user
         return super(TaskCreateView, self).form_valid(form)
 
 class LogInView(LoginView):
@@ -54,7 +53,7 @@ class RegistrationView(FormView):
     template_name = "user_reg.html"
     form_class = UserCreationForm
     redirect_authenticated_url = True
-    success_url = reverse_lazy('login')
+    success_url = reverse_lazy('task-list')
 
     def form_valid(self, form):
         user = form.save()

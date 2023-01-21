@@ -12,5 +12,7 @@
 <p>{{ object.created_date }}</p>
 <p>{{ object.completed }}</p>
 
+<!--    <button type="submit">DELETE</button>-->
+    <a href="{% url 'task-delete' object.id %}">Del</a>
 </body>
 </html>

@@ -7,8 +7,12 @@ from .serializers import TaskSerializers
 
 class TaskViewSet(ModelViewSet):
     serializer_class = TaskSerializers
-    queryset = Task.objects.all()
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
-    
+    def get_queryset(self):
+        return Task.objects.filter(user=self.request.user)
+
+    def perform_create(self, serializer):
+        serializer.validated_data['user'] = self.request.user
+        serializer.save()
